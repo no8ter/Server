@@ -15,11 +15,19 @@
     input[type=submit]{
         width:100%;
     }
+    input[type=radio]{
+        width: auto;
+    }
     button{
         width: 100%;
     }
     form {
         margin-bottom: 0;
+    }
+    div.wrapper{
+        border: 1px solid #888;
+        display: inline-block;
+        padding:20px;
     }
     div.form{
         display: flex;

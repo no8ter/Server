@@ -1,7 +1,5 @@
 package ru.rgrtu.pahomova.Mappings;
 
-import org.mortbay.jetty.SessionIdManager;
-import org.mortbay.jetty.servlet.AbstractSessionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.rgrtu.pahomova.Utils.Connect;
@@ -17,8 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static ru.rgrtu.pahomova.Utils.UserTools.addNewListener;
-import static ru.rgrtu.pahomova.Utils.UserTools.getUserData;
+import static ru.rgrtu.pahomova.Utils.UserTools.*;
 
 public class MappingServlet extends HttpServlet {
 
@@ -34,7 +31,7 @@ public class MappingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 
         String path = req.getServletPath();
-        logger.info("Got GET request: " + path);
+        logger.debug("Got GET request: " + path);
         UserDataHolder userData = (UserDataHolder) req.getSession().getAttribute("userData");
 
         switch (path) {
@@ -92,7 +89,7 @@ public class MappingServlet extends HttpServlet {
 
         String path = req.getServletPath();
         HttpSession session = req.getSession();
-        logger.info("Got POST request: " + path);
+        logger.debug("Got POST request: " + path);
 
         switch (path) {
             case ("/login"):
@@ -127,6 +124,16 @@ public class MappingServlet extends HttpServlet {
                 String childSex = req.getParameter("sex");
                 try {
                     addNewListener(childFirstName, childSecondName, childLastName, childBirthday, childSex);
+                } catch (SQLException e) {
+                    logger.error(e.toString());
+                }
+                resp.sendRedirect("/");
+                break;
+            case ("/handleStudentRequest"):
+                String listenerId = req.getParameter("listenerId");
+                String yesOrNo = req.getParameter("yes_no");
+                try {
+                    handleStudentRequest(listenerId, yesOrNo);
                 } catch (SQLException e) {
                     logger.error(e.toString());
                 }

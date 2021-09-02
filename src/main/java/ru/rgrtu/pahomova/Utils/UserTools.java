@@ -1,5 +1,6 @@
 package ru.rgrtu.pahomova.Utils;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
@@ -13,42 +14,32 @@ import static ru.rgrtu.pahomova.Utils.Connect.exeq;
 
 public class UserTools {
 
-    public static int getUserID(String login, String pass) {
+    private static final Logger logger = LoggerFactory.getLogger(UserTools.class);
+
+    public static int getUserID(String login, String pass) throws SQLException {
         if (login == null || pass == null) {
             throw new RuntimeException("Invalid login or password!");
         }
         String sql = "SELECT rowid FROM 'Пользователь' WHERE Логин LIKE '" + login + "' AND Пароль LIKE '" + pass + "';";
         ResultSet results = exeq(sql);
-        return 1;
+        assert results != null;
+        if (results.next()) return results.getInt(1);
+        throw new RuntimeException("Invalid login or password");
     }
 
     public static boolean checkLoginAndPass(String login, String pass) {
 
-        if (login == null || pass == null) {
-            return false;
-        }
         try {
-            String sql = "SELECT rowid FROM 'Пользователь' WHERE Логин LIKE '" + login + "' AND Пароль LIKE '" + pass + "';";
-            ResultSet results = exeq(sql);
-
-            assert results != null;
-            return results.next();
-        } catch (SQLException e) {
-            LoggerFactory.getLogger(UserTools.class).error(e.toString());
+            getUserID(login, pass);
+            return true;
+        } catch (RuntimeException | SQLException e) {
+            logger.error(e.toString());
             return false;
         }
     }
 
     public static UserDataHolder getUserData(String login, String pass) throws SQLException {
-        String sql = "SELECT rowid FROM 'Пользователь' WHERE Логин LIKE '" + login + "' AND Пароль LIKE '" + pass + "';";
-        int id = 0;
-        ResultSet results = exeq(sql);
-
-        assert results != null;
-        if (results.next()) {
-            id = results.getInt(1);
-        }
-        return getUserData(id);
+        return getUserData(getUserID(login, pass));
     }
 
     public static UserDataHolder getUserData(int id) throws SQLException {
@@ -73,7 +64,7 @@ public class UserTools {
                 String fname = results.getString(3);
                 String tname = results.getString(4);
                 String phone = results.getString(5);
-                String profCode  = results.getString(6);
+                String profCode = results.getString(6);
                 ret = new UserDataHolder(code, fname, sname, tname, phone, profCode);
                 ret.isWorker = true;
             }
@@ -93,24 +84,6 @@ public class UserTools {
         return ret;
     }
 
-    public static List<List<String>> getChatStory() {
-        List<List<String>> ret = new ArrayList<>();
-
-        try {
-            String sql = "SELECT username, message FROM 'chat' join 'users' on 'chat'.'user_id'='users'.'rowid' LIMIT 100;";
-            ResultSet results = exeq(sql);
-            assert results != null;
-            while (results.next()) {
-                ret.add(asList(results.getString("username"), results.getString("message")));
-            }
-
-        } catch (SQLException e) {
-            LoggerFactory.getLogger(UserTools.class).error(e.toString());
-        }
-
-        return ret;
-    }
-
     public static int addNewListener(String firstName, String secondName, String lastName, String birthday, String sex) throws SQLException {
         int newListenerId = 0;
 
@@ -121,7 +94,7 @@ public class UserTools {
         if (max.next()) maxCode = max.getInt(1);
 
         sql = "INSERT INTO 'Слушатель' (Код_сл, Фамилия, Имя, Отчество, Дата_рожд, Пол) VALUES (" +
-                (maxCode+1)+", '"+secondName+"', '"+firstName+"', '"+lastName+"' ,'"+birthday+"', '" + sex +"');";
+                (maxCode + 1) + ", '" + secondName + "', '" + firstName + "', '" + lastName + "' ,'" + birthday + "', '" + sex + "');";
         exec(sql);
 
         sql = "SELECT LAST_INSERT_ROWID();";
@@ -130,5 +103,51 @@ public class UserTools {
         if (id.next()) newListenerId = max.getInt(1);
 
         return newListenerId;
+    }
+
+    public static List<List<String>> getListenersList(boolean flag) {
+        List<List<String>> list = new ArrayList<>();
+
+        String sql = "SELECT PK_Слушатель, Фамилия || ' ' || Имя || ' ' || Отчество || ' - ' || Дата_рожд FROM 'Слушатель' WHERE Активный == "+flag+";";
+        ResultSet users = exeq(sql);
+        assert users != null;
+        while (true) {
+            try {
+                if (!users.next()) break;
+                list.add(new ArrayList<>(asList(users.getString(1), users.getString(2))));
+            } catch (SQLException e) {
+                logger.error(e.toString());
+            }
+        }
+
+        return list;
+    }
+
+    public static void handleStudentRequest(String id, String bool) throws SQLException {
+        String sql;
+        if ("true".equalsIgnoreCase(bool)) {
+            sql = "UPDATE 'Слушатель' SET Активный = true WHERE PK_Слушатель LIKE " + id + ";";
+        } else {
+            sql = "DELETE FROM 'Слушатель' WHERE PK_Слушатель LIKE " + id + ";";
+        }
+        exec(sql);
+    }
+
+    public static List<String> getTeachersSubjects(String id) {
+        List<String> subjects = new ArrayList<>();
+
+        String sql = "SELECT Код_зан FROM Занятие WHERE Код_сотр LIKE "+id+";";
+        ResultSet results = exeq(sql);
+        assert results != null;
+        while (true) {
+            try {
+                if (!results.next()) break;
+                subjects.add(results.getString(1));
+            } catch (SQLException e) {
+                logger.error(e.toString());
+            }
+        }
+
+        return subjects;
     }
 }

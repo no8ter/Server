@@ -15,7 +15,9 @@ public class Connect {
     private static Connection connect;
     private static Statement statement;
 
-    static {connect();}
+    static {
+        connect();
+    }
 
     public static synchronized void connect() {
         if (connect == null) {
@@ -132,21 +134,27 @@ public class Connect {
                 "Код_долж, Должность) VALUES (2, 'Сотрудник')");
         statement.execute("INSERT INTO 'Родитель'(" +
                 "Код_род, Фамилия, Имя, Отчество, Телефон) VALUES (" +
-                "000001, 'Иванов', 'Иван', 'Иванович', '+79005003020')");
+                "1, 'Иванов', 'Иван', 'Иванович', '+79005003020')");
         statement.execute("INSERT INTO 'Сотрудник'(" +
                 "Код_сотр, Фамилия, Имя, Отчество, Телефон, Специальность,Код_долж) VALUES (" +
-                "000001, 'Петров', 'Петр', 'Петрович', '+79006007080', 'Учитель', 1)");
+                "1, 'Петров', 'Петр', 'Петрович', '+79006007080', 'Учитель', 1)");
         statement.execute("INSERT INTO 'Сотрудник'(" +
                 "Код_сотр, Фамилия, Имя, Отчество, Телефон, Специальность,Код_долж) VALUES (" +
-                "000002, 'Киров', 'Кирилл', 'Петрович', '+79006007080', 'Куратор', 2)");
+                "2, 'Киров', 'Кирилл', 'Петрович', '+79006007080', 'Куратор', 2)");
         statement.execute("INSERT INTO 'Пользователь'(" +
                 "Логин, Пароль, Код_ч, Сотрудник) VALUES (" +
-                "'admin', 'admin', 000001, true);");
+                "'curator', 'curator', 1, true);");
         statement.execute("INSERT INTO 'Пользователь'(" +
                 "Логин, Пароль, Код_ч, Сотрудник) VALUES (" +
-                "'curator', 'curator', 000002, true);");
+                "'admin', 'admin', 2, true);");
         statement.execute("INSERT INTO 'Пользователь'(" +
                 "Логин, Пароль, Код_ч, Сотрудник) VALUES (" +
-                "'parent', 'parent', 000001, false);");
+                "'parent', 'parent', 1, false);");
+        statement.execute("INSERT INTO 'Занятие' (" +
+                "    Код_зан, Название, Код_сотр) VALUES (" +
+                "    1, 'Информатика', 1);");
+        statement.execute("INSERT INTO 'Занятие' (" +
+                "    Код_зан, Название, Код_сотр) VALUES (" +
+                "    2, 'Математика', 1);");
     }
 }
