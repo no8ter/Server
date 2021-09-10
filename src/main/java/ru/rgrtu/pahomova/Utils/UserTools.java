@@ -84,13 +84,14 @@ public class UserTools {
         return ret;
     }
 
-    public static int addNewListener(String firstName, String secondName, String lastName, String birthday, String sex) throws SQLException {
+    public static int addNewListener(String firstName, String secondName, String lastName, String birthday, String sex) {
         int newListenerId = 0;
 
         String sql = "SELECT MAX(Код_сл) FROM 'Слушатель';";
         int maxCode = -1;
         ResultSet max = exeq(sql);
         assert max != null;
+        try {
         if (max.next()) maxCode = max.getInt(1);
 
         sql = "INSERT INTO 'Слушатель' (Код_сл, Фамилия, Имя, Отчество, Дата_рожд, Пол) VALUES (" +
@@ -101,7 +102,9 @@ public class UserTools {
         ResultSet id = exeq(sql);
         assert id != null;
         if (id.next()) newListenerId = max.getInt(1);
-
+        } catch (SQLException e) {
+            logger.error(e.toString());
+        }
         return newListenerId;
     }
 

@@ -123,11 +123,7 @@ public class MappingServlet extends HttpServlet {
                 String childLastName = req.getParameter("lastName");
                 String childBirthday = req.getParameter("birthday");
                 String childSex = req.getParameter("sex");
-                try {
-                    addNewListener(childFirstName, childSecondName, childLastName, childBirthday, childSex);
-                } catch (SQLException e) {
-                    logger.error(e.toString());
-                }
+                addNewListener(childFirstName, childSecondName, childLastName, childBirthday, childSex);
                 resp.sendRedirect("/");
                 break;
             case ("/handleStudentRequest"):
