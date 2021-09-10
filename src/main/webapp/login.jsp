@@ -8,12 +8,12 @@
         <h2>Авторизация</h2>
         <div class="form">
             <form method="post">
-                <p><label>
-                    <input name="username" type="text" placeholder="Логин">
-                </label></p>
-                <p><label>
-                    <input name="password" type="password" placeholder="Пароль">
-                </label><br></p>
+                <label>
+                    <input name="username" type="text" placeholder="Логин" required>
+                </label>
+                <label>
+                    <input name="password" type="password" placeholder="Пароль" required>
+                </label>
                 <p><input type="submit" value="Войти"></p>
             </form>
         </div>

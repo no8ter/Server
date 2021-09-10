@@ -107,6 +107,7 @@ public class MappingServlet extends HttpServlet {
                     } catch (SQLException e) {
                         logger.error(e.toString());
                     }
+                    assert user != null;
                     user.username = username;
                     session.setAttribute("userData", user);
 
@@ -132,11 +133,14 @@ public class MappingServlet extends HttpServlet {
             case ("/handleStudentRequest"):
                 String listenerId = req.getParameter("listenerId");
                 String yesOrNo = req.getParameter("yes_no");
-                try {
-                    handleStudentRequest(listenerId, yesOrNo);
-                } catch (SQLException e) {
-                    logger.error(e.toString());
-                }
+                handleStudentRequest(listenerId, yesOrNo);
+                resp.sendRedirect("/");
+                break;
+            case ("/handleSetMark"):
+                String subjectId = req.getParameter("subjectId");
+                String studentId = req.getParameter("listenerId");
+                String mark = req.getParameter("mark");
+                handleSetStudentMark(studentId, subjectId, mark);
                 resp.sendRedirect("/");
                 break;
             default:

@@ -108,35 +108,64 @@ public class UserTools {
     public static List<List<String>> getListenersList(boolean flag) {
         List<List<String>> list = new ArrayList<>();
 
-        String sql = "SELECT PK_Слушатель, Фамилия || ' ' || Имя || ' ' || Отчество || ' - ' || Дата_рожд FROM 'Слушатель' WHERE Активный == "+flag+";";
+        String sql = "SELECT PK_Слушатель, Фамилия || ' ' || Имя || ' ' || Отчество || ' - ' || Дата_рожд FROM 'Слушатель' WHERE Активный == " + flag + ";";
         ResultSet users = exeq(sql);
         assert users != null;
-        while (true) {
-            try {
-                if (!users.next()) break;
+        try {
+            while (users.next()) {
                 list.add(new ArrayList<>(asList(users.getString(1), users.getString(2))));
-            } catch (SQLException e) {
-                logger.error(e.toString());
             }
+        } catch (SQLException e) {
+            logger.error(e.toString());
         }
 
         return list;
     }
 
-    public static void handleStudentRequest(String id, String bool) throws SQLException {
+    public static List<List<String>> getSubjectsList() {
+        List<List<String>> list = new ArrayList<>();
+        //TODO: Remove hardset
+        int teacherId = 1;
+
+        String sql = "SELECT PK_Занятие, Название FROM Занятие WHERE Код_сотр = "+teacherId+";";
+        ResultSet users = exeq(sql);
+        assert users != null;
+        try {
+            while (users.next()) {
+                list.add(new ArrayList<>(asList(users.getString(1), users.getString(2))));
+            }
+        } catch (SQLException e) {
+            logger.error(e.toString());
+        }
+
+        return list;
+    }
+
+    public static void handleStudentRequest(String id, String bool) {
         String sql;
         if ("true".equalsIgnoreCase(bool)) {
             sql = "UPDATE 'Слушатель' SET Активный = true WHERE PK_Слушатель LIKE " + id + ";";
+            exec(sql);
+            sql = "INSERT INTO 'Сл_гр'('Код_сл', 'Код_гр') VALUES (" + id + ", 1);";
+            logger.debug("New listener was appended");
         } else {
             sql = "DELETE FROM 'Слушатель' WHERE PK_Слушатель LIKE " + id + ";";
+            logger.debug("New listener was declined");
         }
+        exec(sql);
+    }
+
+    public static void handleSetStudentMark(String studentId, String subjectId, String mark) {
+        String sql;
+        sql = "INSERT INTO Оценка VALUES("+subjectId+", "+studentId+", "+mark+");";
+        logger.debug("Mark for {} is {}", studentId, mark);
         exec(sql);
     }
 
     public static List<String> getTeachersSubjects(String id) {
         List<String> subjects = new ArrayList<>();
 
-        String sql = "SELECT Код_зан FROM Занятие WHERE Код_сотр LIKE "+id+";";
+        String sql = "SELECT Код_зан FROM Занятие WHERE Код_сотр LIKE " + id + ";";
         ResultSet results = exeq(sql);
         assert results != null;
         while (true) {

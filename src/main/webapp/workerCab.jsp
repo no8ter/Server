@@ -17,12 +17,12 @@
                         }
                     %>
                 </select>
-                <p><label>
+                <label>
                     <input type="radio" name="yes_no" value="true" checked><span>Принять</span>
-                </label></p>
-                <p><label>
+                </label>
+                <label>
                     <input type="radio" name="yes_no" value="false" ><span>Отклонить</span>
-                </label></p>
+                </label>
                 <input type="submit" value="Отправить">
             </form>
         </div>

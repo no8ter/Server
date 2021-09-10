@@ -28,4 +28,9 @@ public class UserToolsTests {
     public void testGetUserData() throws SQLException {
         assertEquals(UserTools.getUserData(1).firstName, "Петр");
     }
+
+    @Test
+    public void testGetListenersList() {
+
+    }
 }

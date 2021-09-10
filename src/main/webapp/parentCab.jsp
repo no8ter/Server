@@ -8,21 +8,14 @@
         <div class="form">
             <h2>Добавление заявки</h2>
             <form method="post">
-                <p><label>
-                    <input name="secondName" type="text" placeholder="Фамилия">
-                </label></p>
-                <p><label>
-                    <input name="firstName" type="text" placeholder="Имя">
-                </label></p>
-                <p><label>
-                    <input name="lastName" type="text" placeholder="Отчество">
-                </label></p>
-                <p><label>
-                    <input name="birthday" type="date" placeholder="Дата рождения">
-                </label></p>
-                <p><label>
-                    <input name="sex" type="text" placeholder="Пол">
-                </label></p>
+                <input name="secondName" type="text" placeholder="Фамилия" required>
+                <input name="firstName" type="text" placeholder="Имя" required>
+                <input name="lastName" type="text" placeholder="Отчество">
+                <input name="birthday" type="date" placeholder="Дата рождения" required>
+                <select name="sex">
+                    <option value="М">Мужчина</option>
+                    <option value="Ж">Женщина</option>
+                </select>
                 <p><input type="submit" value="Отправить заявку"></p>
             </form>
         </div>

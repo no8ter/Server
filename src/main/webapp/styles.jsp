@@ -10,13 +10,17 @@
         flex-direction: column;
     }
     input{
-        width:95%;
+        width: 95%;
+        margin: 5px;
     }
     input[type=submit]{
-        width:100%;
+        width: 100%;
     }
     input[type=radio]{
         width: auto;
+    }
+    input[type=date]{
+        width: 95%;
     }
     button{
         width: 100%;
@@ -33,10 +37,6 @@
         display: flex;
         flex-direction: column;
     }
-    div.send_message_form{
-        display: flex;
-        flex-direction: row;
-    }
     div.main{
         margin-left: 10%;
         margin-right: 10%;
@@ -47,13 +47,6 @@
         justify-content: center;
         flex-direction: column;
     }
-    div.messenger{
-        height: 80%;
-        width: 60%;
-        margin-top: 3%;
-        display: flex;
-        flex-direction: column;
-    }
     div.menu{
         display: flex;
         flex-direction: row;
@@ -62,15 +55,13 @@
     div.menu > a > button{
         margin: 10px;
     }
-    form#send_message{
+    form {
         width: 100%;
-        flex-direction: row;
+        flex-direction: column;
         display: flex;
     }
-    form#send_message > input[type=text]{
-        width: 80%;
-    }
-    form#send_message > input[type=submit]{
-        width: 20%;
+    select {
+        width: 100%;
+        margin: 5px;
     }
 </style>

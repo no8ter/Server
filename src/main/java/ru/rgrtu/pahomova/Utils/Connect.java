@@ -156,5 +156,7 @@ public class Connect {
         statement.execute("INSERT INTO 'Занятие' (" +
                 "    Код_зан, Название, Код_сотр) VALUES (" +
                 "    2, 'Математика', 1);");
+        statement.execute("INSERT INTO 'Группа' (" +
+                "    Код_гр, Номер_гр) VALUES (1, '044M');");
     }
 }
