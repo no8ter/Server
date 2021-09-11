@@ -12,7 +12,7 @@
             <form method="post" action="/handleSetMark">
                 <select name="listenerId">
                     <%
-                        for (List<String> l: UserTools.getListenersList(false)) {
+                        for (List<String> l: UserTools.getListenersList(true)) {
                             out.println("<option value=\""+l.get(0)+"\">"+l.get(1)+"</option>");
                         }
                     %>
